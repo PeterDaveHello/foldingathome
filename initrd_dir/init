@@ -293,140 +293,137 @@ tar xzf $DOWNLOAD
 
 # Create a CD generator link
 cat << EOF > cd.html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="en">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Diskless Folding Parameters</title>
 </head>
 <body>
-<Form action="cgi-bin/fold.iso" method="post">
-  <P>
-    <Label for="USER">Username: </Label>
-    <Input type="text" name="USER" value="$USER"><BR>
-    <Label for="TEAM">Team: </Label>
-    <Input type="text" name="TEAM" value="$TEAM"><BR>
-    <Label for="PASSKEY">Passkey: </Label>
-    <Input type="text" name="PASSKEY" value="$PASSKEY"><BR>
-    <Label for="BACKUP">Backup interval (in minutes, 0 to disable) </Label>
-    <Input type="text" name="BACKUP" value="$BACKUP"><BR>
-    Big Work Units:<BR>
+<form action='cgi-bin/fold.iso' method='post'>
+  <p>
+    <label for='USER'>Username: </label>
+    <input type='text' name='USER' value='$USER'><br />
+    <label for='TEAM'>Team: </label>
+    <input type='text' name='TEAM' value='$TEAM'><br />
+    <label for='PASSKEY'>Passkey: </label>
+    <input type='text' name='PASSKEY' value='$PASSKEY'><br />
+    <label for='BACKUP'>Backup interval (in minutes, 0 to disable) </label>
+    <input type='text' name='BACKUP' value='$BACKUP'><br />
+    Big Work Units:<br />
 EOF
-    if [ "$BIG" = "normal" ]
+    if [ "$BIG" = "big" ]
     then
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"big\"> Big (>10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"normal\" checked=\"true\"> Normal (5-10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"small\"> Small (<5MB)<BR>" >> cd.html
-    elif [ "$BIG" = "big" ]
+      BIG_VAL_BIG='checked="true"'
+    elif [ "$BIG" = "small" ]
     then
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"big\" checked=\"true\"> Big (>10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"normal\"> Normal (5-10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"small\"> Small (<5MB)<BR>" >> cd.html
+      BIG_VAL_SMALL='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"big\"> Big (>10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"normal\"> Normal (5-10MB)<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"BIG\" value=\"small\" checked=\"true\"> Small (<5MB)<BR>" >> cd.html
+      BIG_VAL_NORMAL='checked="true"'
     fi
-    echo "    Advmethods requesting new advanced cores and/or work units if available:<BR>" >> cd.html
+    echo "    <input type='radio' name='BIG' value='big' $BIG_VAL_BIG> Big (>10MB)<br />" >> cd.html
+    echo "    <input type='radio' name='BIG' value='normal' $BIG_VAL_NORMAL> Normal (5-10MB)<br />" >> cd.html
+    echo "    <input type='radio' name='BIG' value='small' $BIG_VAL_SMALL> Small (<5MB)<br />" >> cd.html
+
+    echo "    Advmethods requesting new advanced cores and/or work units if available:<br />" >> cd.html
     if [ "$ADVMETHODS" = "yes" ]
     then
-      echo "    <Input type=\"radio\" name=\"ADVMETHODS\" value=\"yes\" checked=\"true\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"ADVMETHODS\" value=\"no\"> Disabled<BR>" >> cd.html
+      ADVMETHODS_ENABLED='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"ADVMETHODS\" value=\"yes\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"ADVMETHODS\" value=\"no\" checked=\"true\"> Disabled<BR>" >> cd.html
+      ADVMETHODS_DISABLED='checked="true"'
     fi
-    echo "    <Label for=\"MEM\">Memory, in MB, to indicate (leave blank for auto-detect): </Label>" >> cd.html
-    echo "    <Input type=\"text\" name=\"MEM\" value=\"$MEM\"><BR>" >> cd.html
-    echo "    SMP instance per:<BR>" >> cd.html
+    echo "    <input type='radio' name='ADVMETHODS' value='yes' $ADVMETHODS_ENABLED> Enabled<br />" >> cd.html
+    echo "    <input type='radio' name='ADVMETHODS' value='no' $ADVMETHODS_DISABLED> Disabled<br />" >> cd.html
+
+    echo "    <label for='MEM'>Memory, in MB, to indicate (leave blank for auto-detect): </label>" >> cd.html
+    echo "    <input type='text' name='MEM' value='$MEM'><br />" >> cd.html
+
+    echo "    SMP instance per:" >> cd.html
     if [ "$SMPCPUS" = "8" ]
     then
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"8\" checked=\"true\"> 8 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"4\"> 4 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"2\"> 2 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"0\"> Automatic<BR>" >> cd.html
+      SMP_8='selected'
     elif [ "$SMPCPUS" = "4" ]
     then
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"8\"> 8 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"4\" checked=\"true\"> 4 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"2\"> 2 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"0\"> Automatic<BR>" >> cd.html
+      SMP_4='selected'
     elif [ "$SMPCPUS" = "2" ]
     then
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"8\"> 8 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"4\"> 4 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"2\" checked=\"true\"> 2 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"0\"> Automatic<BR>" >> cd.html
+      SMP_2='selected'
     else
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"8\"> 8 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"4\"> 4 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"2\"> 2 CPUs<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SMPCPUS\" value=\"0\" checked=\"true\"> Automatic<BR>" >> cd.html
+      SMP_AUTO='selected'
     fi
-    echo "    Remote Reboot:<BR>" >> cd.html
+    echo "    <select name ='SMPCPUS'>" >> cd.html
+    echo "      <option value='8' $SMP_8>8</option>" >> cd.html
+    echo "      <option value='4' $SMP_4>4</option>" >> cd.html
+    echo "      <option value='2' $SMP_2>2</option>" >> cd.html
+    echo "      <option value='0' $SMP_AUTO>Automatic</option>" >> cd.html
+    echo "    </select>Threads<br />" >> cd.html
+
+
+    echo "    Remote Reboot:<br />" >> cd.html
     if [ "$REBOOT" = "enabled" ]
     then
-      echo "    <Input type=\"radio\" name=\"REBOOT\" value=\"enabled\" checked=\"true\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"REBOOT\" value=\"disabled\"> Disabled<BR>" >> cd.html
+      REBOOT_ENABLED='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"REBOOT\" value=\"enabled\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"REBOOT\" value=\"disabled\" checked=\"true\"> Disabled<BR>" >> cd.html
+      REBOOT_DISABLED='checked="true"'
     fi
-    echo "    Remote Poweroff:<BR>" >> cd.html
+    echo "    <input type='radio' name='REBOOT' value='enabled' $REBOOT_ENABLED>Enabled<br />" >> cd.html
+    echo "    <input type='radio' name='REBOOT' value='disabled' $REBOOT_DISABLED>Disabled<br />" >> cd.html
+
+    echo "    Remote Poweroff:<br />" >> cd.html
     if [ "$POWEROFF" = "enabled" ]
     then
-      echo "    <Input type=\"radio\" name=\"POWEROFF\" value=\"enabled\" checked=\"true\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"POWEROFF\" value=\"disabled\"> Disabled<BR>" >> cd.html
+      POWEROFF_ENABLED='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"POWEROFF\" value=\"enabled\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"POWEROFF\" value=\"disabled\" checked=\"true\"> Disabled<BR>" >> cd.html
+      POWEROFF_DISABLED='checked="true"'
     fi
-    echo "    Install to USB drives on boot:<BR>" >> cd.html
+    echo "    <input type='radio' name='POWEROFF' value='enabled' $POWEROFF_ENABLED>Enabled<br />" >> cd.html
+    echo "    <input type='radio' name='POWEROFF' value='disabled' $POWEROFF_DISABLED>Disabled<br />" >> cd.html
+
+    echo "    Install to USB drives on boot:<br />" >> cd.html
     if [ "$INSTALL" = "yes" ]
     then
-      echo "    <Input type=\"radio\" name=\"INSTALL\" value=\"yes\" checked=\"true\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"INSTALL\" value=\"no\"> Disabled<BR>" >> cd.html
+      INSTALL_YES='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"INSTALL\" value=\"yes\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"INSTALL\" value=\"no\" checked=\"true\"> Disabled<BR>" >> cd.html
+      INSTALL_NO='checked="true"'
     fi
-    echo "    <Label for=\"BLANK\">Console blank time (1-60 minutes, 0=disabled): </Label>" >> cd.html
-    echo "    <Input type=\"text\" name=\"BLANK\" value=\"$BLANK\"><BR>" >> cd.html
+    echo "    <input type='radio' name='INSTALL' value='yes' $INSTALL_YES>Enabled<br />" >> cd.html
+    echo "    <input type='radio' name='INSTALL' value='no' $INSTALL_NO>Disnabled<br />" >> cd.html
+
+    echo "    <label for='BLANK'>Console blank time (1-60 minutes, 0=disabled): </label>" >> cd.html
+    echo "    <input type='text' name='BLANK' value='$BLANK'><br />" >> cd.html
     cat << EOF >> cd.html
-    <Label for="PROXY_HOST">Proxy Hostname (blank if no proxy): </Label>
-    <Input type="text" name="PROXY_HOST" value="$PROXY_HOST"><BR>
-    <Label for="PROXY_PORT">Proxy Port (blank if no proxy): </Label>
-    <Input type="text" name="PROXY_PORT" value="$PROXY_PORT"><BR>
-    <Label for="PROXY_USER">Proxy Username (blank if no proxy or proxy doesn't require username and password): </Label>
-    <Input type="text" name="PROXY_USER" value="$PROXY_USER"><BR>
-    <Label for="PROXY_PASS">Proxy Password (blank if no proxy or proxy doesn't require username and password): </Label>
-    <Input type="text" name="PROXY_PASS" value="$PROXY_PASS"><BR>
-    <Label for="INTF">Interface(blank for DHCP round-robin):  </Label>
-    <Input type="text" name="INTF" value="$INTF"><BR>
-    <Label for="IP">Static IP (blank for DHCP):  </Label>
-    <Input type="text" name="IP" value="$IP"><BR>
-    <Label for="MASK">Subnet Mask (blank for DHCP):  </Label>
-    <Input type="text" name="MASK" value="$MASK"><BR>
-    <Label for="GATEWAY">Default Gateway (blank for DHCP):  </Label>
-    <Input type="text" name="GATEWAY" value="$GATEWAY"><BR>
-    <Label for="DNS">DNS Server IP (blank for DHCP):  </Label>
-    <Input type="text" name="DNS" value="$DNS"><BR>
-    <Label for="TFTP">TFTP Server IP (blank for DHCP):  </Label>
-    <Input type="text" name="TFTP" value="$TFTP"><BR>
-    Login shell:<BR>
+    <label for="PROXY_HOST">Proxy Hostname (blank if no proxy): </label>
+    <input type="text" name="PROXY_HOST" value="$PROXY_HOST"><br />
+    <label for="PROXY_PORT">Proxy Port (blank if no proxy): </label>
+    <input type="text" name="PROXY_PORT" value="$PROXY_PORT"><br />
+    <label for="PROXY_USER">Proxy Username (blank if no proxy or proxy doesn't require username and password): </label>
+    <input type="text" name="PROXY_USER" value="$PROXY_USER"><br />
+    <label for="PROXY_PASS">Proxy Password (blank if no proxy or proxy doesn't require username and password): </label>
+    <input type="text" name="PROXY_PASS" value="$PROXY_PASS"><br />
+    <label for="INTF">Interface(blank for DHCP round-robin):  </label>
+    <input type="text" name="INTF" value="$INTF"><br />
+    <label for="IP">Static IP (blank for DHCP):  </label>
+    <input type="text" name="IP" value="$IP"><br />
+    <label for="MASK">Subnet Mask (blank for DHCP):  </label>
+    <input type="text" name="MASK" value="$MASK"><br />
+    <label for="GATEWAY">Default Gateway (blank for DHCP):  </label>
+    <input type="text" name="GATEWAY" value="$GATEWAY"><br />
+    <label for="DNS">DNS Server IP (blank for DHCP):  </label>
+    <input type="text" name="DNS" value="$DNS"><br />
+    <label for="TFTP">TFTP Server IP (blank for DHCP):  </label>
+    <input type="text" name="TFTP" value="$TFTP"><br />
+    Login shell:<br />
 EOF
     if [ "$SHELL" = "yes" ]
     then
-      echo "    <Input type=\"radio\" name=\"SHELL\" value=\"yes\" checked=\"true\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SHELL\" value=\"no\"> Disabled<BR>" >> cd.html
+      SHELL_YES='checked="true"'
     else
-      echo "    <Input type=\"radio\" name=\"SHELL\" value=\"yes\"> Enabled<BR>" >> cd.html
-      echo "    <Input type=\"radio\" name=\"SHELL\" value=\"no\" checked=\"true\"> Disabled<BR>" >> cd.html
+      SHELL_NO='checked="true"'
     fi
+    echo "    <input type='radio' name='SHELL' value='yes' $SHELL_YES> Enabled<br />" >> cd.html
+    echo "    <input type='radio' name='SHELL' value='no' $SHELL_NO> Disabled<br />" >> cd.html
     cat << EOF >> cd.html
-    <Input type="submit" value="Download ISO"> <Input type="reset">
-  </P>
-</Form>
+    <input type="submit" value="Download ISO"> <input type="reset">
+  </p>
+</form>
 </body>
 </html>
 EOF
@@ -459,42 +456,38 @@ echo "Hostname: " `hostname`
 echo "IP address:" `cat /tmp/myip`
 
 cat << EOF > index.backup
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
-<TITLE>Diskless Folder</TITLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<P ALIGN=CENTER><FONT SIZE=7 STYLE="font-size: 32pt">Diskless Folder</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Diskless Folding version $VERSION built by $BUILDER</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Processor type: $arch</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Found $numprocs processors</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>User: $USER</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Team: $TEAM</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Passkey: $PASSKEY</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Big Packets: $BIG</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Advmethods: $ADVMETHODS</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Memory: $MEM MB</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Backup every $BACKUP minutes</FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3>Core checkpoint every $CHECKPOINT minutes</FONT></P>
+<html>
+<head>
+<title>Diskless Folder</title>
+</head>
+<body>
+<p style='text-align:center; font-size: 32pt;'>Diskless Folder</p>
+<p>Diskless Folding version $VERSION built by $BUILDER</p>
+<p>Processor type: $arch</p>
+<p>Found $numprocs processors</p>
+<p>User: $USER</p>
+<p>Team: $TEAM</p>
+<p>Passkey: $PASSKEY</p>
+<p>Big Packets: $BIG</p>
+<p>Advmethods: $ADVMETHODS</p>
+<p>Memory: $MEM MB</p>
+<p>Backup every $BACKUP minutes</p>
+<p>Core checkpoint every $CHECKPOINT minutes</p>
 EOF
 
-echo "<P ALIGN=LEFT><FONT SIZE=3>Restart running with <a href=\"cgi-bin/oneunit.cgi\">oneunit</a> flag</FONT></P>" >> index.backup
+echo "<p>Restart running with <a href='cgi-bin/oneunit.cgi'>oneunit</a> flag</p>" >> index.backup
 # Do remote reboot setup
 if [ "$REBOOT" = "enabled" ]
 then
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Remote reboot: <a href=\"reboot.html\">enabled</a></FONT></P>" >> index.backup
+  echo "<p>Remote reboot: <a href='reboot.html'>enabled</a></p>" >> index.backup
   cat << EOF > reboot.html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
-<TITLE>Reboot</TITLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<P ALIGN=LEFT><FONT SIZE=3>Click <a href="cgi-bin/reboot.cgi">here</a> to reboot this diskless folder</FONT></P> 
-</BODY></HTML>
+<html>
+<head>
+<title>Reboot</title>
+</head>
+<body>
+<p>Click <a href='cgi-bin/reboot.cgi'>here</a> to reboot this diskless folder</p> 
+</body></html>
 EOF
   cat << EOF > /bin/do_reboot.sh
 #!/bin/sh
@@ -506,37 +499,38 @@ EOF
 #!/bin/sh
 echo "Content-type: text/html"
 echo ""
-echo "<html><head><META HTTP-EQUIV=\"Refresh\" CONTENT=\"90;URL=/\">"
-echo "<SCRIPT LANGUAGE=\"JavaScript\"><!--"
-echo "function redirect () { setTimeout(\"go_now()\",90000); }"
-echo "function go_now ()   { window.location.href = \"/\"; }"
-echo "//--></SCRIPT></head>"
-echo "<body onLoad \"redirect()\">"
-echo "Remote reboot command sent."
-echo "<BR>This page will refresh back to the main page for this diskless folder in 90 seconds."
-echo "<BR>If this does not work, click <a href="/">here</a>."
-echo "</body></html>"
+echo "<html>"
+echo "<head>"
+echo "<meta http-equiv='refresh' content='90; url=/'>"
+echo "<script><!--"
+echo "function redirect () { setTimeout('go_now()', 90000); }"
+echo "function go_now () { window.location.href = '/'; }"
+echo "//--></script>"
+ehco "</head>"
+echo "<body onload 'redirect()'>"
+echo "Remote reboot command sent.<br />"
+echo "This page will refresh back to the main page for this diskless folder in 90 seconds.<br />"
+echo "If this does not work, click <a href='/'>here</a>."
+echo "</body>"
+echo "</html>"
 echo ""
 /bin/do_reboot.sh > /dev/null 2>&1 &
 EOF
   chmod 755 cgi-bin/reboot.cgi
 else
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Remote reboot: disabled</FONT></P>" >> index.backup
+  echo "<p>Remote reboot: disabled</p>" >> index.backup
 fi
 # Do remote poweroff setup
 if [ "$POWEROFF" = "enabled" ]
 then
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Remote poweroff: <a href=\"poweroff.html\">enabled</a></FONT></P>" >> index.backup
+  echo "<p>Remote poweroff: <a href='poweroff.html'>enabled</a></p>" >> index.backup
   cat << EOF > poweroff.html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
-<TITLE>Poweroff</TITLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<P ALIGN=LEFT><FONT SIZE=3>Click <a href="cgi-bin/poweroff.cgi">here</a> to poweroff this diskless folder</FONT></P> 
-</BODY></HTML>
+<html>
+<head>
+<title>Poweroff</title>
+</head>
+<body><p>Click <a href='cgi-bin/poweroff.cgi'>here</a> to poweroff this diskless folder</p></body>
+</html>
 EOF
   cat << EOF > /bin/do_poweroff.sh
 #!/bin/sh
@@ -555,35 +549,35 @@ echo ""
 EOF
   chmod 755 cgi-bin/poweroff.cgi
 else
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Remote poweroff: disabled</FONT></P>" >> index.backup
+  echo "<p>Remote poweroff: disabled</p>" >> index.backup
 fi
 
-echo "<P ALIGN=LEFT><FONT SIZE=3>Install: $INSTALL</FONT></P>" >> index.backup
+echo "<p>Install: $INSTALL</p>" >> index.backup
 if [ $BLANK -eq 0 ]
 then
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Console blank: disabled</FONT></P>" >> index.backup
+  echo "<p>Console blank: disabled</p>" >> index.backup
 else
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Console blank: $BLANK minutes</FONT></P>" >> index.backup
+  echo "<p>Console blank: $BLANK minutes</p>" >> index.backup
 fi
-echo "<P ALIGN=LEFT><FONT SIZE=3>Hostname: " `hostname` "</FONT></P>" >> index.backup
-echo "<P ALIGN=LEFT><FONT SIZE=3>IP address:" `cat /tmp/myip` "</FONT></P>" >> index.backup
+echo "<p>Hostname: " `hostname` "</p>" >> index.backup
+echo "<p>IP address:" `cat /tmp/myip` "</p>" >> index.backup
 
 # Check if this is running on the bare metal or a VM and do NTP if necessary
 if [ $noVMWare -eq 0 ]
 then
   echo "Running under VMWare, not using NTP to sync time"
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Running under VMWare, not using NTP to sync time</FONT></P>" >> index.backup
+  echo "<p>Running under VMWare, not using NTP to sync time</p>" >> index.backup
 elif [ $noVPC -eq 0 ]
 then
   echo "Running under VirtualPC, not using NTP to sync time"
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Running under VirtualPC, not using NTP to sync time</FONT></P>" >> index.backup
+  echo "<p>Running under VirtualPC, not using NTP to sync time</p>" >> index.backup
 elif [ $noQEMU -eq 0 ]
 then
   echo "Running under QEMU or KVM, not using NTP to sync time"
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Running under QEMU or KVM, not using NTP to sync time</FONT></P>" >> index.backup
+  echo "<p>Running under QEMU or KVM, not using NTP to sync time</p>" >> index.backup
 else
   echo "VMWare, VirtualPC, QEMU and KVM not detected, using NTP to sync time"
-  echo "<P ALIGN=LEFT><FONT SIZE=3>VMWare and VirtualPC not detected, using NTP to sync time</FONT></P>" >> index.backup
+  echo "<p>VMWare and VirtualPC not detected, using NTP to sync time</p>" >> index.backup
   /bin/ntpd -p 0.pool.ntp.org -p 1.pool.ntp.org -p 2.pool.ntp.org -p 3.pool.ntp.org
 fi
 
@@ -601,8 +595,8 @@ then
     instances=$numprocs
   fi
   echo "" > /etc/folding/hanglog.txt
-  echo "<P ALIGN=LEFT><FONT SIZE=3>Hang check <A HREF=\"hanglog.txt\">logfile</A></FONT></P>" >> index.backup
-  echo "<P ALIGN=LEFT><FONT SIZE=3>SMP instance per $SMPCPUS CPUs</FONT></P>" >> index.backup
+  echo "<p>Hang check <a href='hanglog.txt'>logfile</a></p>" >> index.backup
+  echo "<p>SMP instance per $SMPCPUS CPUs</p>" >> index.backup
   echo "SMP instance per $SMPCPUS CPUs"
   FAH_FLAGS="$FAH_FLAGS -smp $SMPCPUS"
 else
@@ -611,8 +605,8 @@ fi
 
 # Links to CD and reconfigure
 echo
-echo "<P ALIGN=LEFT><FONT SIZE=3>Folding CD <A HREF="cd.html">Generator</A></FONT></P>" >> index.backup
-echo -n "<P ALIGN=LEFT><FONT SIZE=3><A HREF=\"reconfigure.html\">Reconfigure</A> " >> index.backup
+echo "<p>Folding CD <a href='cd.html'>Generator</a></p>" >> index.backup
+echo -n "<p><a href='reconfigure.html'>Reconfigure</a> " >> index.backup
 if [ $noVMWare -eq 0 -o $noQEMU -eq 0 -o $noVPC -eq 0 ] 
 then
   if [ "`cat /proc/sys/kernel/bootloader_type`" = "49" ]
@@ -620,14 +614,14 @@ then
     echo -n "this host and " >> index.backup
   fi
 fi
-echo "any USB drives.</FONT></P>" >> index.backup
+echo "any USB drives.</p>" >> index.backup
 
-echo "<P ALIGN=LEFT><FONT SIZE=3>Processor <A HREF=\"cgi-bin/sensors.cgi\">temperatures</A> (Intel Core and AMD K8)</FONT></P>" >> index.backup
+echo "<p>Processor <a href='cgi-bin/sensors.cgi'>temperatures</a> (Intel Core and AMD K8)</p>" >> index.backup
 
 # VM and USB updater link
 #if [ "`cat /proc/sys/kernel/bootloader_type`" = "49" ]
 #then
-#  echo "<P ALIGN=LEFT><FONT SIZE=3><A HREF="update.cgi">Check</A> for updates</FONT></P>" >> index.backup
+#  echo "<p><a href='pdate.cgi'>Check</a> for updates</p>" >> index.backup
 #fi
 
 # Setup webpage for each instance
@@ -635,20 +629,18 @@ instance=1
 while [ "$instance" -le "$numprocs" ]
 do
   cat << EOF >> index.backup
-<P ALIGN=LEFT><FONT SIZE=3><B>Instance <A HREF="$instance/">$instance</A></B></FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3><A HREF="$instance/FAHlog.txt">Folding
-Log File</A></FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3><A HREF="$instance/unitinfo.txt">Unit
-Info</A></FONT></P>
-<P ALIGN=LEFT><FONT SIZE=3><A HREF="$instance/backup.tar">Backup of WU</A></FONT></P>
+<p><strong>Instance <a href='$instance/'>$instance</a></strong></p>
+<p><a href='$instance/FAHlog.txt'>Folding Log File</a></p>
+<p><a href='$instance/unitinfo.txt'>Unit Info</a></p>
+<p><a href='$instance/backup.tar'>Backup of WU</a></p>
 EOF
   if [ $smp -eq 1 ]
   then
-    echo "<P ALIGN=LEFT><FONT SIZE=3><A HREF="cgi-bin/kill_cores.cgi?$instance">Kill</A> folding cores</FONT></P>" >> index.backup
+    echo "<p><a href='cgi-bin/kill_cores.cgi?$instance'>Kill</a> folding cores</p>" >> index.backup
   fi
   instance=`expr $instance + 1`
 done
-echo "</BODY></HTML>" >> index.backup
+echo "</body></html>" >> index.backup
 grep -v backup index.backup > index.html
 
 # Setup the instances
